@@ -59,7 +59,7 @@ function AttendanceView() {
     setEmployees(emp);
     let ptime = {};
 
-    Object.values(employees).forEach((element) => {
+    Object.values(emp).forEach((element) => {
       let etime = {};
       for (
         let day = 1;
@@ -90,7 +90,7 @@ function AttendanceView() {
       ptime[element.id] = etime;
     });
     setTime(ptime);
-  }, [pretime, time, employees, date]);
+  }, [pretime, time, date]);
 
   const my_id = getCachedLogin();
   const [myInfo, setMyInfo] = useState(null);
@@ -98,6 +98,16 @@ function AttendanceView() {
     (args) => API.infoEmployee(args),
     [my_id],
   ]);
+
+  const groupedEmployees = Object.values(employees).reduce((acc, emp) => {
+    if (!acc[emp.subcompany]) {
+      acc[emp.subcompany] = [];
+    }
+    acc[emp.subcompany].push(emp);
+    return acc;
+  }, {});
+
+  const formattedDate = dayjs(date).format('MMMM YYYY');
 
   return !myInfo || !time ? null : (
     <div style={{ display: "flex" }}>
@@ -109,13 +119,13 @@ function AttendanceView() {
           showfunctions={false}
           username={myInfo.name}
         />
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={12} md={8}>
             <Typography variant="h4" gutterBottom>
-              Посещения за месяц
+              Посещения за {formattedDate}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6} style={{ textAlign: 'center'}}>
+          <Grid item xs={12} md={4} style={{ textAlign: 'right' }}>
             <DatePicker
               className="datepicker"
               format="MM/YY"
@@ -131,68 +141,75 @@ function AttendanceView() {
             />
           </Grid>
         </Grid>
-        <TableContainer style={{ marginTop: '20px' }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell className="attendance-view-cell">
-                  <Typography variant="subtitle1">ФИО</Typography>
-                </TableCell>
-                {[...Array(getDaysInMonth(date.getMonth(), date.getFullYear()) + 1).keys()]
-                  .slice(1)
-                  .map((day) => (
-                    <TableCell key={day} className="attendance-view-cell">
-                      <Typography variant="subtitle1">{day}</Typography>
+        {Object.keys(groupedEmployees).map((subcompany) => (
+          <div key={subcompany} style={{ marginTop: '40px' }}>
+            <Typography variant="h5" gutterBottom>
+              {subcompany}
+            </Typography>
+            <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className="attendance-view-cell">
+                      <Typography variant="subtitle1">ФИО</Typography>
                     </TableCell>
-                  ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Object.values(employees).map((emp) => (
-                <TableRow key={emp.id}>
-                  <TableCell className="attendance-view-cell">
-                    <Typography variant="body1">
-                      {emp.surname + " " + emp.name + " " + optional(emp.patronymic)}
-                    </Typography>
-                  </TableCell>
-                  {!time || Object.keys(time).length === 0 ? (
-                    <TableCell colSpan={getDaysInMonth(date.getMonth(), date.getFullYear())}>
-                      <Typography variant="body1" align="center">
-                        No data available
-                      </Typography>
-                    </TableCell>
-                  ) : (
-                    Object.keys(time[emp.id]).map((day) => (
-                      <TableCell
-                        key={day}
-                        className={
-                          "attendance-view-cell" +
-                          ([0, 6].includes(new Date(new Date(date).setDate(day)).getDay())
-                            ? " attendance-view-cell-weekend"
-                            : "")
-                        }
-                      >
+                    {[...Array(getDaysInMonth(date.getMonth(), date.getFullYear()) + 1).keys()]
+                      .slice(1)
+                      .map((day) => (
+                        <TableCell key={day} className="attendance-view-cell">
+                          <Typography variant="subtitle1">{day}</Typography>
+                        </TableCell>
+                      ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {groupedEmployees[subcompany].map((emp) => (
+                    <TableRow key={emp.id}>
+                      <TableCell className="attendance-view-cell">
                         <Typography variant="body1">
-                          {time[emp.id][day]["absense"]
-                            ? "Н"
-                            : (() => {
-                                let delta = time[emp.id][day]["end"] - time[emp.id][day]["start"];
-                                if (delta === 0) {
-                                  return "";
-                                }
-                                let minutes = (delta % 3600000) / 60000;
-                                let hours = (delta - (delta % 3600000)) / 3600000;
-                                return hours.toString() + ":" + (minutes < 10 ? "0" + minutes.toString() : minutes.toString());
-                              })()}
+                          {emp.surname + " " + emp.name + " " + optional(emp.patronymic)}
                         </Typography>
                       </TableCell>
-                    ))
-                  )}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                      {!time || Object.keys(time).length === 0 ? (
+                        <TableCell colSpan={getDaysInMonth(date.getMonth(), date.getFullYear())}>
+                          <Typography variant="body1" align="center">
+                            No data available
+                          </Typography>
+                        </TableCell>
+                      ) : (
+                        Object.keys(time[emp.id]).map((day) => (
+                          <TableCell
+                            key={day}
+                            className={
+                              "attendance-view-cell" +
+                              ([0, 6].includes(new Date(new Date(date).setDate(day)).getDay())
+                                ? " attendance-view-cell-weekend"
+                                : "")
+                            }
+                          >
+                            <Typography variant="body1">
+                              {time[emp.id][day]["absense"]
+                                ? "Н"
+                                : (() => {
+                                    let delta = time[emp.id][day]["end"] - time[emp.id][day]["start"];
+                                    if (delta === 0) {
+                                      return "";
+                                    }
+                                    let minutes = (delta % 3600000) / 60000;
+                                    let hours = (delta - (delta % 3600000)) / 3600000;
+                                    return hours.toString() + ":" + (minutes < 10 ? "0" + minutes.toString() : minutes.toString());
+                                  })()}
+                            </Typography>
+                          </TableCell>
+                        ))
+                      )}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        ))}
       </div>
     </div>
   );

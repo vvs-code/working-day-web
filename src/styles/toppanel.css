@@ -3,15 +3,11 @@
   margin-left: 48px;
   font-family: "Roboto";
   font-size: 24px;
-  /* width: 200px; */
   line-height: 28px;
   font-weight: 700;
 }
 
 .top-panel-profpic {
-  /* width: 40px; */
-  /* height: 40px; */
-  /* border-radius: 100%; */
   margin-left: 24px;
   object-fit: cover;
 }
@@ -21,7 +17,6 @@
   margin-right: 20px;
   margin-bottom: 0px;
   margin-top: 0px;
-  /* width: 82px; */
   height: 18px;
   font-family: "Roboto";
   font-size: 16px;
@@ -37,7 +32,6 @@
 
 .top-panel-content {
   display: flex;
-  /* justify-content: end; */
 }
 
 .top-panel-controls {
@@ -46,12 +40,8 @@
   height: fit-content;
   width: fit-content;
   align-items: center;
-  /* margin-left: 756px; */
   margin-left: auto;
   margin-right: 30px;
-  /* justify-self: flex-end; */
-  /* justify-self: end; */
-  /* flex-direction: row; */
 }
 
 .top-panel-functions {
@@ -64,7 +54,6 @@
 .top-panel-function {
   display: flex;
   height: fit-content;
-  /* align-items: center; */
   margin-right: 16px;
 }
 
@@ -82,4 +71,30 @@
 .top-panel-functions-underline {
   height: 2px;
   color: #f0f0f0;
+}
+
+.support-button {
+  border-color: #164f94;
+  color: #164f94;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.support-button:hover {
+  background-color: #164f94;
+  color: #fff;
+}
+
+.support-button:hover .icon-wrapper,
+.support-button:hover .icon-wrapper .MuiSvgIcon-root {
+  color: #fff;
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
 }

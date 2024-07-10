@@ -58,7 +58,7 @@ function CalendarDay(props) {
                 color: "green",
                 position: "absolute",
                 top: 0,
-                right: showVacationIcon ? 10 : 0,
+                right: showVacationIcon ? 8 : 0,
               }}
             />
           )}

@@ -4,7 +4,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import logo from "./logo.svg";
 import "./App.css";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import UserTestPage from "./pages/UserTestPage";
 import AutoLayoutExample from "./pages/TEST";
@@ -23,14 +23,11 @@ import ViewDocuments from "./pages/ViewDocuments";
 import Calendar from "./pages/Calendar";
 import ReportDocuments from "./pages/ReportDocuments";
 import { ThemeProvider, createTheme } from "@mui/material";
-import { locale } from "dayjs";
-import { setDefaultOptions } from "date-fns";
-import { ru } from "date-fns/locale";
-import { ruRU } from "@mui/x-date-pickers/locales";
 import { useEffect } from "react";
 import UserAdd from "./pages/UserAdd";
 import AbsenseRequest from "./pages/AbsenseRequest";
 import ExcelReader from "./pages/ExcelReader"; 
+import EmailClientSelector from "./components/TopPanel/EmailClientSelector"; // Import the new component
 
 function App() {
   useEffect(() => {
@@ -38,9 +35,7 @@ function App() {
   }, []);
 
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDayjs}
-    >
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
@@ -59,7 +54,8 @@ function App() {
           <Route path="/documents/report" element={<ReportDocuments />} />
           <Route path="/user/add" element={<UserAdd />} />
           <Route path="/absense/request" element={<AbsenseRequest />} />
-          <Route path="/excel" element={<ExcelReader />} /> {/* Добавьте этот маршрут */}
+          <Route path="/excel" element={<ExcelReader />} />
+          <Route path="/select-email-client" element={<EmailClientSelector />} /> {/* Add the new route */}
         </Routes>
       </BrowserRouter>
     </LocalizationProvider>
