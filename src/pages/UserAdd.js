@@ -75,11 +75,14 @@ function UserAdd() {
       setNotification({ open: true, message: "Введите имя и фамилию" });
       return;
     }
+
+    const employeeRole = role || "user";
+
     let addres = await API.addEmployee({
       name,
       surname,
       patronymic: midname,
-      role,
+      role: employeeRole,
     });
     let addresjson = await addres.json();
     setLogin(addresjson.login);
