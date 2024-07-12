@@ -1,3 +1,4 @@
+
 import Cookies from "universal-cookie";
 
 class API {
@@ -176,21 +177,23 @@ class API {
   }
 
   static async login({ login, password, company_id }) {
-    let r = await this.authorize({
-      login: login,
-      password: password,
-      company_id: company_id,
+    let r = await this.xfetch({
+      path: "/authorize",
+      method: "POST",
+      body: {
+        login: login,
+        password: password,
+        company_id: company_id,
+      },
     });
-    console.log(r);
     r = await r.json();
-    console.log("R JSON");
-    console.log(r);
+    console.log("Login response:", r);
 
     if (r && r.token) {
-      // this.logout();
       this.cookies.set("login", login, { path: "/" });
       this.cookies.set("auth_token", r.token, { path: "/" });
       this.cookies.set("role", r.role, { path: "/" });
+      console.log("Cookies after login:", this.cookies.getAll()); 
       return true;
     }
     return false;

@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 import API from "../network/API";
 import '../styles/LoginPage.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import Cookies from "universal-cookie";
 
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (min - max + 1)) + min;
 }
 
 function setElementPosition(element) {
@@ -31,8 +32,28 @@ function LoginPage() {
   const [companyId, setCompanyId] = useState(""); 
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const cookies = new Cookies();
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const token = cookies.get("auth_token");
+      const login = cookies.get("login");
+      console.log("Cookies in checkAuth:", { token, login });
+
+      if (token && login) {
+        try {
+          const response = await API.infoEmployee(login);
+          if (response.status === 200) {
+            navigate("/user/me");
+          }
+        } catch (error) {
+          console.error("Authorization check failed", error);
+        }
+      }
+    };
+
+    checkAuth();
+
     const lines = document.querySelectorAll('.line');
     const dots = document.querySelectorAll('.dot');
     const elements = [...lines, ...dots];
@@ -59,7 +80,7 @@ function LoginPage() {
         element.removeEventListener('animationend', handleAnimationEnd);
       });
     };
-  }, []);
+  }, [navigate, cookies]);
 
   const onClick = async (event) => {
     event.preventDefault();
