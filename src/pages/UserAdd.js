@@ -30,7 +30,8 @@ function UserAdd() {
   const [receivers, setReceivers] = useState([]);
   const [employees, setEmployees] = useState({});
   const [pretime, setPretime] = useState(null);
-  const [notification, setNotification] = useState({ open: false, message: '' });
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
+  const [errors, setErrors] = useState({ name: false, surname: false, midname: false });
 
   const navigate = useNavigate();
 
@@ -71,8 +72,13 @@ function UserAdd() {
   }
 
   async function addEmployee() {
-    if (!name || !surname) {
-      setNotification({ open: true, message: "Введите имя и фамилию" });
+    if (!name || !surname || /\s/.test(name) || /\s/.test(surname) || /\s/.test(midname)) {
+      setErrors({
+        name: /\s/.test(name),
+        surname: /\s/.test(surname),
+        midname: /\s/.test(midname),
+      });
+      setNotification({ open: true, message: "Введите корректные имя, фамилию и отчество без пробелов", severity: 'warning' });
       return;
     }
 
@@ -89,7 +95,7 @@ function UserAdd() {
     setPassword(addresjson.password);
 
     if (!addres || !addres.ok) {
-      setNotification({ open: true, message: "Не удалось создать пользователя" });
+      setNotification({ open: true, message: "Не удалось создать пользователя", severity: 'error' });
       return;
     }
 
@@ -99,12 +105,12 @@ function UserAdd() {
         head_id: receivers[0],
       });
       if (!addheadres || !addheadres.ok) {
-        setNotification({ open: true, message: "Не удалось назначить руководителя" });
+        setNotification({ open: true, message: "Не удалось назначить руководителя", severity: 'error' });
         return;
       }
     }
 
-    setNotification({ open: true, message: "Пользователь успешно добавлен" });
+    setNotification({ open: true, message: "Пользователь успешно добавлен", severity: 'success' });
   }
 
   function refresh() {
@@ -126,7 +132,12 @@ function UserAdd() {
                   fullWidth
                   label="Фамилия"
                   variant="outlined"
-                  onChange={(e) => setSurname(e.target.value)}
+                  error={errors.surname}
+                  helperText={errors.surname ? "Фамилия не должна содержать пробелов" : ""}
+                  onChange={(e) => {
+                    setSurname(e.target.value);
+                    setErrors({ ...errors, surname: /\s/.test(e.target.value) });
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -134,7 +145,12 @@ function UserAdd() {
                   fullWidth
                   label="Имя"
                   variant="outlined"
-                  onChange={(e) => setName(e.target.value)}
+                  error={errors.name}
+                  helperText={errors.name ? "Имя не должно содержать пробелов" : ""}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setErrors({ ...errors, name: /\s/.test(e.target.value) });
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -142,7 +158,12 @@ function UserAdd() {
                   fullWidth
                   label="Отчество"
                   variant="outlined"
-                  onChange={(e) => setMidname(e.target.value)}
+                  error={errors.midname}
+                  helperText={errors.midname ? "Отчество не должно содержать пробелов" : ""}
+                  onChange={(e) => {
+                    setMidname(e.target.value);
+                    setErrors({ ...errors, midname: /\s/.test(e.target.value) });
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -229,7 +250,7 @@ function UserAdd() {
           autoHideDuration={6000}
           onClose={() => setNotification({ ...notification, open: false })}
         >
-          <Alert onClose={() => setNotification({ ...notification, open: false })} severity="success" sx={{ width: '100%' }}>
+          <Alert onClose={() => setNotification({ ...notification, open: false })} severity={notification.severity} sx={{ width: '100%' }}>
             {notification.message}
           </Alert>
         </Snackbar>

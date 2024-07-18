@@ -57,7 +57,7 @@ function AttendanceTable() {
   useAsync(
     getJsonWithErrorHandlerFunc,
     (data) => {
-      console.log("API response:", data); // Log the API response
+      console.log("API response:", data); 
       setPretime(data);
     },
     [
@@ -71,18 +71,17 @@ function AttendanceTable() {
     if (pretime === null) return;
     if (Object.keys(time).length !== 0) return;
 
-    console.log("Processing attendance records:", pretime.attendances); // Log attendance records
-
+    console.log("Processing attendance records:", pretime.attendances); 
     let emp = [];
     let uniqueIds = new Set();
     pretime.attendances.forEach((element) => {
-      console.log("Processing employee:", element.employee); // Log each employee
+      console.log("Processing employee:", element.employee); 
       if (!uniqueIds.has(element.employee.id)) {
         emp.push(element.employee);
         uniqueIds.add(element.employee.id);
       }
     });
-    console.log("Unique employees:", emp); // Log unique employees
+    console.log("Unique employees:", emp); 
     setEmployees(emp);
 
     let ptime = {};
@@ -99,7 +98,7 @@ function AttendanceTable() {
       };
       ptime[element.id] = j;
     }
-    console.log("Processed time data:", ptime); // Log processed time data
+    console.log("Processed time data:", ptime); 
     setTime(ptime);
   }, [pretime, time]);
 
@@ -155,8 +154,11 @@ function AttendanceTable() {
       ),
     });
 
-    const duration = ((time[emp_id].end - time[emp_id].start) / (1000 * 60 * 60)).toFixed(2);
-    setSnackbarMessage(`Посещение для ${employees.find(emp => emp.id === emp_id).name} сохранено. Время: ${duration} часов`);
+    const message = time[emp_id].absense
+      ? `Посещение для ${employees.find(emp => emp.id === emp_id).name} сохранено. Отсутствие`
+      : `Посещение для ${employees.find(emp => emp.id === emp_id).name} сохранено. Время: ${((time[emp_id].end - time[emp_id].start) / (1000 * 60 * 60)).toFixed(2)} часов`;
+
+    setSnackbarMessage(message);
     setSnackbarOpen(true);
   }
 
