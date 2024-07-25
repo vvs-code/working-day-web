@@ -27,7 +27,7 @@ import { useEffect } from "react";
 import UserAdd from "./pages/UserAdd";
 import AbsenseRequest from "./pages/AbsenseRequest";
 import ExcelReader from "./pages/ExcelReader"; 
-import EmailClientSelector from "./components/TopPanel/EmailClientSelector"; // Import the new component
+import EmailClientSelector from "./components/TopPanel/EmailClientSelector"; 
 
 function App() {
   useEffect(() => {

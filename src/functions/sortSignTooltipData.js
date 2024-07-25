@@ -1,5 +1,5 @@
 function sortSignTooltipData(signs) {
-  return signs.toSorted((a, b) => {
+  return signs.sort((a, b) => {
     if (a.signed < b.signed) {
       return 1;
     } else if (a.signed > b.signed) {

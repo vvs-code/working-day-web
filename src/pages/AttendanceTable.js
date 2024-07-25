@@ -17,12 +17,13 @@ import {
 } from "@mui/material";
 import { DatePicker, TimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import "dayjs/locale/ru"; 
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import optional from "../functions/optional";
-import { addDays, format, subDays } from "date-fns";
-import dayjs from "dayjs";
+import { addDays, subDays } from "date-fns";
 import API from "../network/API";
 import formatDate from "../functions/formatDate";
 import getCachedLogin from "../functions/getCachedLogin";
@@ -32,7 +33,7 @@ import LeftPanel from "../components/LeftPanel/LeftPanel";
 import TopPanel from "../components/TopPanel/TopPanel";
 import "../styles/attendance.css";
 
-const DATE_STORAGE_KEY = "attendance_selected_date";
+dayjs.locale("ru"); 
 
 const theme = createTheme({
   palette: {
@@ -43,9 +44,7 @@ const theme = createTheme({
 });
 
 function AttendanceTable() {
-  const initialDate = localStorage.getItem(DATE_STORAGE_KEY)
-    ? new Date(localStorage.getItem(DATE_STORAGE_KEY))
-    : new Date().setHours(0, 0, 0, 0);
+  const initialDate = new Date().setHours(0, 0, 0, 0);
 
   const [date, setDate] = useState(initialDate);
   const [employees, setEmployees] = useState([]);
@@ -57,7 +56,7 @@ function AttendanceTable() {
   useAsync(
     getJsonWithErrorHandlerFunc,
     (data) => {
-      console.log("API response:", data); 
+      console.log("API response:", data);
       setPretime(data);
     },
     [
@@ -71,17 +70,18 @@ function AttendanceTable() {
     if (pretime === null) return;
     if (Object.keys(time).length !== 0) return;
 
-    console.log("Processing attendance records:", pretime.attendances); 
+    console.log("Processing attendance records:", pretime.attendances);
+
     let emp = [];
     let uniqueIds = new Set();
     pretime.attendances.forEach((element) => {
-      console.log("Processing employee:", element.employee); 
+      console.log("Processing employee:", element.employee);
       if (!uniqueIds.has(element.employee.id)) {
         emp.push(element.employee);
         uniqueIds.add(element.employee.id);
       }
     });
-    console.log("Unique employees:", emp); 
+    console.log("Unique employees:", emp);
     setEmployees(emp);
 
     let ptime = {};
@@ -98,13 +98,9 @@ function AttendanceTable() {
       };
       ptime[element.id] = j;
     }
-    console.log("Processed time data:", ptime); 
+    console.log("Processed time data:", ptime);
     setTime(ptime);
   }, [pretime, time]);
-
-  useEffect(() => {
-    localStorage.setItem(DATE_STORAGE_KEY, date);
-  }, [date]);
 
   function setStart(v, emp_id) {
     let d = new Date(v);
@@ -154,11 +150,8 @@ function AttendanceTable() {
       ),
     });
 
-    const message = time[emp_id].absense
-      ? `Посещение для ${employees.find(emp => emp.id === emp_id).name} сохранено. Отсутствие`
-      : `Посещение для ${employees.find(emp => emp.id === emp_id).name} сохранено. Время: ${((time[emp_id].end - time[emp_id].start) / (1000 * 60 * 60)).toFixed(2)} часов`;
-
-    setSnackbarMessage(message);
+    const duration = ((time[emp_id].end - time[emp_id].start) / (1000 * 60 * 60)).toFixed(2);
+    setSnackbarMessage(`Посещение для ${employees.find(emp => emp.id === emp_id).name} сохранено. Время: ${duration} часов`);
     setSnackbarOpen(true);
   }
 
@@ -175,7 +168,7 @@ function AttendanceTable() {
 
   return !myInfo || !time ? null : (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
         <Box display="flex">
           <LeftPanel highlight="attendance" />
           <Box flexGrow={1}>
