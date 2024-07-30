@@ -4,7 +4,7 @@ import IconRender from "../IconRender/IconRender";
 import optional from "../../functions/optional";
 import getCachedRole from "../../functions/getCachedRole";
 import { Link } from "react-router-dom";
-import "../../styles/leftpanel.css"; // Убедитесь, что стили подключены
+import "../../styles/leftpanel.css"; 
 
 function LeftPanel({ highlight }) {
   return (
@@ -111,7 +111,7 @@ function LeftPanel({ highlight }) {
           iwidth="24px"
           iheight="24px"
         />
-        <p className="left-panel-label">Запрос отпуска</p>
+        <p className="left-panel-label">Запросы</p>
       </Link>
       {optional(
         getCachedRole() === "admin",
@@ -125,7 +125,7 @@ function LeftPanel({ highlight }) {
           <p className="left-panel-label">Отчет по документам</p>
         </Link>
       )}
-      <Link className={`left-panel-link ${highlight === "excel" ? "highlight" : ""}`} to="/excel">
+      {/* <Link className={`left-panel-link ${highlight === "excel" ? "highlight" : ""}`} to="/excel">
         <IconRender
           className="left-panel-icon"
           path="/images/icons/excel.svg" 
@@ -133,7 +133,7 @@ function LeftPanel({ highlight }) {
           iheight="24px"
         />
         <p className="left-panel-label">Расписание</p>
-      </Link>
+      </Link> */}
     </Drawer>
   );
 }

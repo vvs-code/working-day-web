@@ -81,7 +81,7 @@ function AttendanceView() {
         let j = {
           start: start,
           end: end,
-          absense: end < start,
+          absense: citem?.abscence_type || (end < start ? "Н" : ""),
         };
 
         etime[day] = j;
@@ -108,6 +108,27 @@ function AttendanceView() {
   }, {});
 
   const formattedDate = dayjs(date).format('MMMM YYYY');
+
+  const absenceTypeLabels = {
+    vacation: "Отпуск",
+    sick_leave: "Больничный",
+    unpaid_vacation: "Отпуск без оплаты",
+    business_trip: "Командировка",
+    overtime: "Сверхурочные",
+  };
+
+  const formatTime = (hours, minutes) => `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+
+  const calculateOvertime = (delta) => {
+    const standardHours = 8;
+    const standardMillis = standardHours * 3600000;
+    const overtimeMillis = delta - standardMillis;
+
+    const overtimeHours = Math.floor(overtimeMillis / 3600000);
+    const overtimeMinutes = Math.floor((overtimeMillis % 3600000) / 60000);
+
+    return `8:00 + ${formatTime(overtimeHours, overtimeMinutes)} сверхурочные`;
+  };
 
   return !myInfo || !time ? null : (
     <div style={{ display: "flex" }}>
@@ -189,7 +210,9 @@ function AttendanceView() {
                           >
                             <Typography variant="body1">
                               {time[emp.id][day]["absense"]
-                                ? "Н"
+                                ? time[emp.id][day]["absense"] === 'overtime'
+                                  ? calculateOvertime(time[emp.id][day]["end"] - time[emp.id][day]["start"])
+                                  : absenceTypeLabels[time[emp.id][day]["absense"]]
                                 : (() => {
                                     let delta = time[emp.id][day]["end"] - time[emp.id][day]["start"];
                                     if (delta === 0) {
