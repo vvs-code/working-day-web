@@ -1,0 +1,39 @@
+.dialog-list {
+    --header-height: 60px;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 12px #0003;
+}
+
+.dialog-list__chats {
+    position: absolute;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+}
+
+.dialog-list__header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    padding: 0 10px 0 20px;
+    background-color: #fff;
+    box-shadow: 0 0 9px #0003;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+}
+
+.dialog-list__no-chats {
+    text-align: center;
+    padding: 30px 10px;
+}

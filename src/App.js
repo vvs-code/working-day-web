@@ -26,8 +26,9 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { useEffect } from "react";
 import UserAdd from "./pages/UserAdd";
 import AbsenseRequest from "./pages/AbsenseRequest";
-import ExcelReader from "./pages/ExcelReader"; 
-import EmailClientSelector from "./components/TopPanel/EmailClientSelector"; 
+import ExcelReader from "./pages/ExcelReader";
+import EmailClientSelector from "./components/TopPanel/EmailClientSelector";
+import { MessengerAppWrapper } from "./messenger/app/MessengerAppWrapper.tsx";
 
 function App() {
   useEffect(() => {
@@ -56,6 +57,8 @@ function App() {
           <Route path="/absense/request" element={<AbsenseRequest />} />
           <Route path="/excel" element={<ExcelReader />} />
           <Route path="/select-email-client" element={<EmailClientSelector />} /> {/* Add the new route */}
+          <Route path="/messenger" element={ <MessengerAppWrapper /> }/>
+          <Route path="/messenger/:dialogId" element={ <MessengerAppWrapper /> }/>
         </Routes>
       </BrowserRouter>
     </LocalizationProvider>

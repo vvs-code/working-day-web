@@ -32,6 +32,15 @@ function LeftPanel({ highlight }) {
         />
         <p className="left-panel-label">Профиль</p>
       </Link>
+      <Link className={`left-panel-link ${highlight === "messenger" ? "highlight" : ""}`} to="/messenger">
+        <IconRender
+            className="left-panel-icon"
+            path="/images/icons/mail.svg"
+            iwidth="24px"
+            iheight="24px"
+        />
+        <p className="left-panel-label">Мессенджер</p>
+      </Link>
       <Link className={`left-panel-link ${highlight === "search" ? "highlight" : ""}`} to="/search">
         <IconRender
           className="left-panel-icon"

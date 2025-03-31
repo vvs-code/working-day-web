@@ -1,0 +1,29 @@
+.message {
+    padding: 4px 12px;
+}
+
+.message__wrapper {
+    border-radius: 5px;
+    max-width: 80%;
+    padding: 6px 100px 6px 10px;
+    position: relative;
+}
+
+.message--my .message__wrapper {
+    background-color: #164f94;
+    color: #fff;
+    margin-left: auto;
+}
+
+.message--other .message__wrapper {
+    background-color: #e2e2e2;
+    color: #000;
+}
+
+.message__time {
+    position: absolute;
+    bottom: 3px;
+    right: 5px;
+    font-size: 0.8em;
+    opacity: 0.8;
+}

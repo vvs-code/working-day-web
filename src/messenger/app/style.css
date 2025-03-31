@@ -1,0 +1,24 @@
+.messenger-app {
+    display: flex;
+    height: 100%;
+}
+
+.messenger-app__wrapper {
+    flex-grow: 1;
+    display: flex;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+.messenger-app__sidebar {
+    width: 300px;
+    height: 100%;
+    flex-shrink: 0;
+    background-color: #f5f5f5;
+}
+
+.messenger-app__content {
+    width: 100%;
+    padding: 50px 10px;
+    text-align: center;
+}

@@ -1,0 +1,58 @@
+{
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "vcs": {
+        "enabled": false,
+        "clientKind": "git",
+        "useIgnoreFile": false
+    },
+    "files": {
+        "ignoreUnknown": false,
+        "include": ["src/messenger/*"]
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 120,
+        "bracketSpacing": false
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "a11y": {
+                "noLabelWithoutControl": "off"
+            },
+            "correctness": {
+                "noEmptyPattern": "off"
+            },
+            "style": {
+                "noNonNullAssertion": "off",
+                "useEnumInitializers": "off"
+            },
+            "suspicious": {
+                "noEmptyBlock": "off",
+                "noControlCharactersInRegex": "off"
+            },
+            "complexity": {
+                "noStaticOnlyClass": "off"
+            },
+            "security": {
+                "noDangerouslySetInnerHtml": "warn"
+            }
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single"
+        }
+    },
+    "css": {
+        "parser": {
+            "cssModules": true
+        }
+    }
+}

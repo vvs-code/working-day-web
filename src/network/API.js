@@ -2,7 +2,7 @@
 import Cookies from "universal-cookie";
 
 class API {
-  static source = `https://working-day.online:8080/v1`;
+  static source = `https://working-day.su:8080/v1`;
   static cookies = new Cookies();
 
   constructor() {
@@ -203,6 +203,7 @@ class API {
     this.cookies.remove("login", { path: "/" });
     this.cookies.remove("auth_token", { path: "/" });
     this.cookies.remove("role", { path: "/" });
+    localStorage.removeItem("messenger");
   }
 
   static async notifications({ earlier_than }) {
@@ -239,7 +240,7 @@ class API {
     });
   }
 
-  static async verdictAbsence({ action_id, notification_id, approve }) {
+  static async verdeictAbsence({ action_id, notification_id, approve }) {
     return await this.authFetch({
       path: "/abscence/verdict",
       method: "POST",
